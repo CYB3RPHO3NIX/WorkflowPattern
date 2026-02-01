@@ -286,16 +286,6 @@ public class CustomProcessingStep : IProcessingStep
 | **Separation of Concerns** | Business logic is separated into discrete, focused components |
 | **Scalability** | Easy to add new workflows or modify existing ones |
 
-## ⚠️ Disadvantages & Limitations
-
-| Disadvantage | Description | Mitigation |
-|--------------|-------------|------------|
-| **Linear Execution Only** | Steps execute sequentially; no support for parallel execution or conditional branching | Consider adding orchestration logic or use workflow engines for complex scenarios |
-| **No Built-in Error Handling** | Exceptions will halt the entire workflow | Implement try-catch within steps or wrap the executor |
-| **No Transaction Support** | No automatic rollback if a step fails | Implement compensation logic in steps or use a saga pattern |
-| **State Management** | Context is in-memory only; lost if process crashes | Persist context to database if durability is required |
-| **No Step Skip/Retry Logic** | Cannot skip failed steps or retry automatically | Implement retry logic within individual steps |
-| **Single Context Instance** | All steps share the same context; potential for key conflicts | Use namespaced keys or structured data objects |
 
 ## 🎯 When to Use This Pattern
 
