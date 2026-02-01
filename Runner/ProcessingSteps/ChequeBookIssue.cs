@@ -10,10 +10,20 @@ namespace Runner.ProcessingSteps
     public class ChequeBookIssue : IProcessingStep
     {
         public string StepName => "ChequeBookIssue";
-
-        public void Execute(WorkflowContext context)
+        public async Task<bool> ExecuteAsync(WorkflowContext context)
         {
-            Console.WriteLine("Cheque Book Issued...");
+            try
+            {
+                await Task.Delay(2000);
+                Console.WriteLine("Cheque Book Issued...");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in {StepName}: {ex.Message}");
+                return false;
+            }
+            
         }
     }
 }

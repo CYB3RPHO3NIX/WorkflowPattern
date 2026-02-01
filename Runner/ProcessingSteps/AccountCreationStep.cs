@@ -10,15 +10,23 @@ namespace Runner.ProcessingSteps
     public class AccountCreationStep : IProcessingStep
     {
         public string StepName => "AccountCreationStep";
-
-        public void Execute(WorkflowContext context)
+        public async Task<bool> ExecuteAsync(WorkflowContext context)
         {
-            Console.WriteLine("Creating Account...");
-            Thread.Sleep(5000);
+            try
+            {
+                Console.WriteLine("Creating Account...");
+                await Task.Delay(5000);
 
-            string accountNumber = "DNF4356";
-            context.Set("AccountNumber", accountNumber);
-            Console.WriteLine($"Account Created: {accountNumber}");
+                string accountNumber = "DNF4356";
+                context.Set("AccountNumber", accountNumber);
+                Console.WriteLine($"Account Created: {accountNumber}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in {StepName}: {ex.Message}");
+                return false;
+            }
         }
     }
 }

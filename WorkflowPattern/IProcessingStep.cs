@@ -9,6 +9,6 @@ namespace WorkflowPattern
     public interface IProcessingStep
     {
         string StepName { get; }
-        void Execute(WorkflowContext context);
+        Task<bool> ExecuteAsync(WorkflowContext context);
     }
 }

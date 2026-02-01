@@ -15,14 +15,34 @@ namespace WorkflowPattern
             _registry = registry;
         }
 
-        public void Execute(WorkflowDefinition workflow)
+        public async Task ExecuteAsync(WorkflowDefinition workflow)
         {
             var context = new WorkflowContext();
-
+            Dictionary<string, bool> executionResult = new Dictionary<string, bool>();
             foreach (var stepName in workflow.Steps)
             {
                 var step = _registry.Resolve(stepName);
-                step.Execute(context);
+                bool result = await step.ExecuteAsync(context);
+                executionResult[stepName] = result;
+            }
+            // show the execution results
+            Console.WriteLine("Workflow Execution Results:");
+            foreach (var kvp in executionResult)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{kvp.Key} - ");
+                if (kvp.Value)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("Success");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("Failed");
+                }
+                Console.ResetColor();
+                Console.WriteLine();
             }
         }
     }

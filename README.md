@@ -295,11 +295,7 @@ public class CustomProcessingStep : IProcessingStep
 | **No Transaction Support** | No automatic rollback if a step fails | Implement compensation logic in steps or use a saga pattern |
 | **State Management** | Context is in-memory only; lost if process crashes | Persist context to database if durability is required |
 | **No Step Skip/Retry Logic** | Cannot skip failed steps or retry automatically | Implement retry logic within individual steps |
-| **Registry Validation** | No validation that all workflow steps are registered until runtime | Add validation method to check workflow definitions |
 | **Single Context Instance** | All steps share the same context; potential for key conflicts | Use namespaced keys or structured data objects |
-| **Synchronous Only** | No async/await support for I/O-bound operations | Consider adding async versions of Execute methods |
-| **No Progress Tracking** | No built-in way to track workflow progress or completion percentage | Add events or callbacks to the executor |
-| **Memory Usage** | Context holds all data in memory throughout execution | Clear unnecessary data from context after use |
 
 ## 🎯 When to Use This Pattern
 

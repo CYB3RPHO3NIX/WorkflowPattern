@@ -11,11 +11,20 @@ namespace Runner.ProcessingSteps
     {
         public string StepName => "DocumentVerificationStep";
 
-        public void Execute(WorkflowContext context)
+        public async Task<bool> ExecuteAsync(WorkflowContext context)
         {
-            Console.WriteLine("Verifying Documents...");
-            Thread.Sleep(5000);
-            Console.WriteLine("Document Verification Completed.");
+            try
+            {
+                Console.WriteLine("Verifying Documents...");
+                await Task.Delay(5000);
+                Console.WriteLine("Document Verification Completed.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in {StepName}: {ex.Message}");
+                return false;
+            }
         }
     }
 }

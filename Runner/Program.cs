@@ -27,7 +27,7 @@ namespace Runner
             };
             WorkflowDefinition workflowDefinition = new WorkflowDefinition(steps);
             WorkflowExecutor executor = new WorkflowExecutor(registry);
-            executor.Execute(workflowDefinition);
+            executor.ExecuteAsync(workflowDefinition).GetAwaiter().GetResult();
             Console.WriteLine("All Process Completed.");
             Console.ReadKey();
         }
