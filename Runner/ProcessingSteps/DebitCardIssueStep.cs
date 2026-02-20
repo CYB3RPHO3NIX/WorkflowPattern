@@ -14,11 +14,16 @@ namespace Runner.ProcessingSteps
         {
             try
             {
+                if (context.Contains("Target") && context.Get<int>("Target") == 0)
+                {
+                    throw new Exception("Already a Debit Card is Issued.");
+                }
                 Console.WriteLine("Creating Debit Card...");
                 await Task.Delay(2000);
                 Console.WriteLine("Activating Card...");
                 await Task.Delay(2000);
                 Console.WriteLine("Card Issued...");
+                
                 return true;
             }
             catch (Exception ex)

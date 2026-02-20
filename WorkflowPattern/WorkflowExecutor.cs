@@ -15,34 +15,34 @@ namespace WorkflowPattern
             _registry = registry;
         }
 
-        public async Task ExecuteAsync(WorkflowDefinition workflow)
+        public async Task ExecuteAsync(Workflow workflow)
         {
             var context = new WorkflowContext();
+            context.Set("Target", 0);
             Dictionary<string, bool> executionResult = new Dictionary<string, bool>();
-            foreach (var stepName in workflow.Steps)
+            var step = workflow.GetSteps().FirstOrDefault();
+            while (true)
             {
-                var step = _registry.Resolve(stepName);
-                bool result = await step.ExecuteAsync(context);
-                executionResult[stepName] = result;
-            }
-            // show the execution results
-            Console.WriteLine("Workflow Execution Results:");
-            foreach (var kvp in executionResult)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"{kvp.Key} - ");
-                if (kvp.Value)
+                //execute
+                IProcessingStep processingStep = _registry.Resolve(step._StepName);
+                bool result = await processingStep.ExecuteAsync(context);
+                executionResult[step._StepName] = result;
+                //decide next step
+                if(result)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Success");
-                }
-                else
+                    if (string.IsNullOrEmpty(step._OnSuccessStepName))
+                    {
+                        break;
+                    }
+                    step = workflow.GetStep(step._OnSuccessStepName);
+                }else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Failed");
+                    if (string.IsNullOrEmpty(step._OnFailureStepName))
+                    {
+                        break;
+                    }
+                    step = workflow.GetStep(step._OnFailureStepName);
                 }
-                Console.ResetColor();
-                Console.WriteLine();
             }
         }
     }

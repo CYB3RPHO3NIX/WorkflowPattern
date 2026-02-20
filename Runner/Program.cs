@@ -7,8 +7,6 @@ namespace Runner
     {
         static void Main(string[] args)
         {
-            WorkflowContext postOfficeContext = new WorkflowContext();
-
             List<IProcessingStep> processingSteps = new List<IProcessingStep>()
             {
                 new AccountCreationStep(),
@@ -18,14 +16,16 @@ namespace Runner
             };
             var registry = new ProcessingStepRegistry(processingSteps);
 
-            var steps = new List<string>()
+            List<Step> steps = new List<Step>() 
             {
-                "DocumentVerificationStep",
-                "AccountCreationStep",
-                "ChequeBookIssue",
-                "DebitCardIssueStep"
+                new Step("DocumentVerificationStep").OnSuccess("AccountCreationStep"),
+                new Step("AccountCreationStep").OnSuccess("ChequeBookIssue"),
+                new Step("ChequeBookIssue").OnSuccess("DebitCardIssueStep"),
+                new Step("DebitCardIssueStep").OnFailure("ChequeBookIssue")
             };
-            WorkflowDefinition workflowDefinition = new WorkflowDefinition(steps);
+
+            
+            Workflow workflowDefinition = new Workflow(steps);
             WorkflowExecutor executor = new WorkflowExecutor(registry);
             executor.ExecuteAsync(workflowDefinition).GetAwaiter().GetResult();
             Console.WriteLine("All Process Completed.");
